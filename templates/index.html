@@ -17,19 +17,56 @@
         </a>
       </div>
     </nav>
-
-    <!-- этот блок можно удалять -->
-    <div class="container">
-      <p class="text-center">
-        Шаблон подключился! Теперь на его базе можно начинать делать веб
-        приложение.
-      </p>
-      <p class="text-center">
-        Удали этот блок и скопируй сюда содержимое тега <code>body</code> из
-        домашнего задания с занятия 2.
-      </p>
-    </div>
-    <!-- блок выше можно удалять -->
+        {% if not words and not error%}
+        <div class="container mt-3">
+            <h1 class="display-1 text-center">Привет Академия!</h1>
+        </div>
+        {% endif %}
+        {% if error %}
+        <div class="container mt-3">
+            <div class="alert alert-danger" role="alert">{{error}}</div>
+        </div>
+        {% endif %}
+        {% if image %}        
+        <div class="container mt-3">
+            <img src="{{image}}" class="rounded mx-auto d-block" style="max-width:50%"
+        </div>
+        {% endif %}
+        <div class="container mt-3">
+            <form class="border border-1 rounded-3 p-3"
+              method="POST"
+              enctype="multipart/form-data">
+                <div class="mb-3">
+                    <label class="form-label" for="customFile">Загрузите изображение для поиска текста на изображении</label>
+                    <input type="file" class="form-control" name="file" id="customFile" />
+                </div>
+                <button type="submit" class="btn btn-primary">Загрузить</button>
+            </form>
+        </div>
+        {% if words %}
+        <div class="container mt-3">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Word</th>
+                        <th scope="col">Score</th>
+                        <th scope="col">Image</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for word in words | sort(attribute='accuracy', reverse = True) %}
+                    <tr class="table-success">
+                        <td>{{loop.index}}</td>
+                        <td>{{word.word}}</td>
+                        <td>{{"%0.2f" | format(100 * word.accuracy)}}%</td>
+                        <td><img src="{{word.image}}"/></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% endif %}
 
     <footer class="container mt-5">
       <p class="text-center text-muted">© 2025 Академия Аналитиков Авито</p>
